@@ -1,0 +1,452 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 2900" width="1440" height="2900">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Outfit:wght@300;400;500;600;700&amp;display=swap');
+    </style>
+    <linearGradient id="heroBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0d0b1a"/>
+      <stop offset="40%" stop-color="#1a1035"/>
+      <stop offset="100%" stop-color="#0f1928"/>
+    </linearGradient>
+    <linearGradient id="heroOverlay" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#0d0b1a" stop-opacity="0.95"/>
+      <stop offset="40%" stop-color="#0d0b1a" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#0d0b1a" stop-opacity="0.1"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#6c5ce7"/>
+      <stop offset="100%" stop-color="#a78bfa"/>
+    </linearGradient>
+    <linearGradient id="marsGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c45a3c"/>
+      <stop offset="100%" stop-color="#e07a5f"/>
+    </linearGradient>
+    <linearGradient id="earthGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2d6a4f"/>
+      <stop offset="50%" stop-color="#40916c"/>
+      <stop offset="100%" stop-color="#1b4965"/>
+    </linearGradient>
+    <radialGradient id="nebulaGrad" cx="0.6" cy="0.4" r="0.7">
+      <stop offset="0%" stop-color="#a78bfa" stop-opacity="0.3"/>
+      <stop offset="30%" stop-color="#6c5ce7" stop-opacity="0.2"/>
+      <stop offset="60%" stop-color="#c45a3c" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </radialGradient>
+    <radialGradient id="starGlow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0%" stop-color="#fff" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softShadow">
+      <feDropShadow dx="0" dy="4" stdDeviation="12" flood-color="#000" flood-opacity="0.12"/>
+    </filter>
+    <filter id="cardGlow">
+      <feDropShadow dx="0" dy="2" stdDeviation="8" flood-color="#6c5ce7" flood-opacity="0.06"/>
+    </filter>
+    <clipPath id="heroClip">
+      <rect x="120" y="116" width="1200" height="420" rx="16"/>
+    </clipPath>
+  </defs>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- BACKGROUND                                 -->
+  <!-- ══════════════════════════════════════════ -->
+  <rect width="1440" height="2900" fill="#f5f3f0"/>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- TOP NAVIGATION BAR                         -->
+  <!-- ══════════════════════════════════════════ -->
+  <rect width="1440" height="64" fill="#0d0b1a"/>
+  
+  <!-- Logo -->
+  <circle cx="152" cy="32" r="12" fill="none" stroke="url(#accentGrad)" stroke-width="1.5"/>
+  <circle cx="148" cy="28" r="2" fill="#a78bfa" opacity="0.9"/>
+  <circle cx="156" cy="30" r="1.5" fill="#6c5ce7" opacity="0.7"/>
+  <circle cx="152" cy="36" r="1.8" fill="#a78bfa" opacity="0.8"/>
+  <circle cx="145" cy="34" r="1" fill="#6c5ce7" opacity="0.5"/>
+  <text x="174" y="38" font-family="Instrument Serif, serif" font-size="20" fill="#f5f3f0">AstroConnect</text>
+
+  <!-- Nav items -->
+  <rect x="520" y="18" width="64" height="28" rx="14" fill="rgba(108,92,231,0.15)"/>
+  <text x="552" y="37" font-family="Outfit, sans-serif" font-size="13" font-weight="500" fill="#a78bfa" text-anchor="middle">Domů</text>
+
+  <text x="632" y="37" font-family="Outfit, sans-serif" font-size="13" font-weight="500" fill="#78756e">Mars</text>
+  <text x="718" y="37" font-family="Outfit, sans-serif" font-size="13" font-weight="500" fill="#78756e">Asteroidy</text>
+
+  <!-- Right icons -->
+  <circle cx="1248" cy="32" r="16" fill="rgba(255,255,255,0.06)"/>
+  <text x="1248" y="37" font-family="Outfit, sans-serif" font-size="14" fill="#78756e" text-anchor="middle">⚙</text>
+
+  <circle cx="1292" cy="32" r="16" fill="rgba(108,92,231,0.2)"/>
+  <text x="1292" y="37" font-family="Outfit, sans-serif" font-size="12" fill="#a78bfa" text-anchor="middle">M</text>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- HERO — APOD (Astronomy Picture of the Day) -->
+  <!-- ══════════════════════════════════════════ -->
+  <g filter="url(#softShadow)">
+    <rect x="120" y="96" width="1200" height="440" rx="20" fill="url(#heroBg)"/>
+  </g>
+
+  <!-- Nebula background effect -->
+  <g clip-path="url(#heroClip)">
+    <rect x="120" y="96" width="1200" height="440" fill="url(#heroBg)"/>
+    <ellipse cx="850" cy="250" rx="400" ry="250" fill="url(#nebulaGrad)"/>
+    
+    <!-- Stars -->
+    <circle cx="300" cy="160" r="1.5" fill="#fff" opacity="0.7"/>
+    <circle cx="450" cy="200" r="1" fill="#fff" opacity="0.5"/>
+    <circle cx="600" cy="140" r="1.2" fill="#fff" opacity="0.6"/>
+    <circle cx="750" cy="180" r="0.8" fill="#fff" opacity="0.4"/>
+    <circle cx="900" cy="130" r="1.5" fill="#fff" opacity="0.6"/>
+    <circle cx="1050" cy="170" r="1" fill="#fff" opacity="0.5"/>
+    <circle cx="1150" cy="150" r="1.3" fill="#fff" opacity="0.7"/>
+    <circle cx="350" cy="280" r="0.8" fill="#fff" opacity="0.3"/>
+    <circle cx="500" cy="320" r="1.2" fill="#fff" opacity="0.5"/>
+    <circle cx="1100" cy="260" r="1" fill="#fff" opacity="0.4"/>
+    <circle cx="250" cy="350" r="1.5" fill="#fff" opacity="0.5"/>
+    <circle cx="1000" cy="350" r="0.8" fill="#fff" opacity="0.3"/>
+    <circle cx="680" cy="250" r="1" fill="#fff" opacity="0.6"/>
+    <circle cx="820" cy="380" r="1.3" fill="#fff" opacity="0.4"/>
+
+    <!-- Nebula glow shapes -->
+    <ellipse cx="800" cy="260" rx="180" ry="100" fill="#6c5ce7" opacity="0.06" transform="rotate(-15 800 260)"/>
+    <ellipse cx="900" cy="220" rx="120" ry="80" fill="#c45a3c" opacity="0.05" transform="rotate(10 900 220)"/>
+    <ellipse cx="750" cy="300" rx="100" ry="60" fill="#a78bfa" opacity="0.08"/>
+
+    <!-- Gradient overlay for text readability -->
+    <rect x="120" y="96" width="600" height="440" fill="url(#heroOverlay)"/>
+  </g>
+
+  <!-- APOD badge -->
+  <rect x="160" y="140" width="120" height="26" rx="13" fill="rgba(108,92,231,0.2)" stroke="rgba(167,139,250,0.3)" stroke-width="1"/>
+  <text x="220" y="158" font-family="Outfit, sans-serif" font-size="10" font-weight="600" fill="#a78bfa" text-anchor="middle" letter-spacing="1.5">SNÍMEK DNE</text>
+
+  <!-- APOD Title -->
+  <text x="160" y="220" font-family="Instrument Serif, serif" font-size="38" fill="#f5f3f0">Mlhovina v Orionu</text>
+
+  <!-- APOD description -->
+  <text x="160" y="260" font-family="Outfit, sans-serif" font-size="14" font-weight="300" fill="rgba(245,243,240,0.6)">Tento úchvatný snímek zachycuje jednu z nejznámějších</text>
+  <text x="160" y="282" font-family="Outfit, sans-serif" font-size="14" font-weight="300" fill="rgba(245,243,240,0.6)">mlhovin na noční obloze — kolébku nových hvězd...</text>
+
+  <!-- CTA button -->
+  <rect x="160" y="310" width="130" height="40" rx="20" fill="url(#accentGrad)"/>
+  <text x="225" y="335" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">Číst dál →</text>
+
+  <!-- APOD date -->
+  <text x="160" y="480" font-family="Outfit, sans-serif" font-size="11" fill="rgba(245,243,240,0.3)">29. března 2026  ·  NASA / ESA / Hubble Heritage Team</text>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- MAIN CONTENT AREA                          -->
+  <!-- ══════════════════════════════════════════ -->
+  
+  <!-- ── Mars Rover Section (Left) ── -->
+  <text x="120" y="600" font-family="Instrument Serif, serif" font-size="11" fill="#c45a3c" letter-spacing="2.5">🪐</text>
+  <text x="142" y="600" font-family="Outfit, sans-serif" font-size="10" font-weight="600" fill="#c45a3c" letter-spacing="2">NEJNOVĚJŠÍ Z MARSU</text>
+
+  <text x="120" y="632" font-family="Instrument Serif, serif" font-size="26" fill="#1e1c19">Perseverance Rover</text>
+
+  <!-- Filters -->
+  <rect x="120" y="656" width="120" height="34" rx="8" fill="#fff" stroke="#e0ddd8" stroke-width="1.5"/>
+  <text x="144" y="678" font-family="Outfit, sans-serif" font-size="12" font-weight="500" fill="#1e1c19">Sol 1042</text>
+  <text x="224" y="678" font-family="Outfit, sans-serif" font-size="10" fill="#b5b1ab">▾</text>
+
+  <rect x="252" y="656" width="150" height="34" rx="8" fill="#fff" stroke="#e0ddd8" stroke-width="1.5"/>
+  <text x="276" y="678" font-family="Outfit, sans-serif" font-size="12" font-weight="500" fill="#1e1c19">Všechny kamery</text>
+  <text x="386" y="678" font-family="Outfit, sans-serif" font-size="10" fill="#b5b1ab">▾</text>
+
+  <!-- Photo grid - Row 1 -->
+  <g filter="url(#softShadow)">
+    <rect x="120" y="710" width="258" height="200" rx="12" fill="#fff"/>
+  </g>
+  <rect x="120" y="710" width="258" height="150" rx="12" fill="#9a7d5a"/>
+  <rect x="120" y="848" width="258" height="12" fill="#fff"/>
+  <!-- Mars terrain -->
+  <circle cx="200" cy="780" r="30" fill="rgba(0,0,0,0.07)"/>
+  <circle cx="300" cy="800" r="20" fill="rgba(0,0,0,0.05)"/>
+  <rect x="120" y="830" width="258" height="30" fill="rgba(0,0,0,0.06)" rx="0"/>
+  <text x="136" y="888" font-family="Outfit, sans-serif" font-size="11" font-weight="600" fill="#1e1c19">Mast Cam</text>
+  <text x="340" y="888" font-family="Outfit, sans-serif" font-size="10" fill="#a09d96" text-anchor="end">Sol 1042</text>
+
+  <g filter="url(#softShadow)">
+    <rect x="394" y="710" width="258" height="200" rx="12" fill="#fff"/>
+  </g>
+  <rect x="394" y="710" width="258" height="150" rx="12" fill="#7a6b52"/>
+  <rect x="394" y="848" width="258" height="12" fill="#fff"/>
+  <circle cx="480" cy="790" r="35" fill="rgba(0,0,0,0.06)"/>
+  <circle cx="570" cy="770" r="18" fill="rgba(0,0,0,0.08)"/>
+  <rect x="394" y="820" width="258" height="40" fill="rgba(0,0,0,0.05)"/>
+  <text x="410" y="888" font-family="Outfit, sans-serif" font-size="11" font-weight="600" fill="#1e1c19">Navigation</text>
+  <text x="614" y="888" font-family="Outfit, sans-serif" font-size="10" fill="#a09d96" text-anchor="end">Sol 1042</text>
+
+  <g filter="url(#softShadow)">
+    <rect x="668" y="710" width="196" height="200" rx="12" fill="#fff"/>
+  </g>
+  <rect x="668" y="710" width="196" height="150" rx="12" fill="#a08060"/>
+  <rect x="668" y="848" width="196" height="12" fill="#fff"/>
+  <circle cx="740" cy="780" r="25" fill="rgba(0,0,0,0.07)"/>
+  <circle cx="810" cy="800" r="15" fill="rgba(0,0,0,0.05)"/>
+  <rect x="668" y="825" width="196" height="35" fill="rgba(0,0,0,0.06)"/>
+  <text x="684" y="888" font-family="Outfit, sans-serif" font-size="11" font-weight="600" fill="#1e1c19">Front Haz</text>
+  <text x="826" y="888" font-family="Outfit, sans-serif" font-size="10" fill="#a09d96" text-anchor="end">Sol 1042</text>
+
+  <!-- Photo grid - Row 2 -->
+  <g filter="url(#softShadow)">
+    <rect x="120" y="930" width="258" height="200" rx="12" fill="#fff"/>
+  </g>
+  <rect x="120" y="930" width="258" height="150" rx="12" fill="#887050"/>
+  <rect x="120" y="1068" width="258" height="12" fill="#fff"/>
+  <circle cx="220" cy="1000" r="28" fill="rgba(0,0,0,0.06)"/>
+  <circle cx="310" cy="1020" r="22" fill="rgba(0,0,0,0.07)"/>
+  <rect x="120" y="1050" width="258" height="30" fill="rgba(0,0,0,0.05)"/>
+  <text x="136" y="1108" font-family="Outfit, sans-serif" font-size="11" font-weight="600" fill="#1e1c19">Chemistry</text>
+  <text x="340" y="1108" font-family="Outfit, sans-serif" font-size="10" fill="#a09d96" text-anchor="end">Sol 1041</text>
+
+  <g filter="url(#softShadow)">
+    <rect x="394" y="930" width="258" height="200" rx="12" fill="#fff"/>
+  </g>
+  <rect x="394" y="930" width="258" height="150" rx="12" fill="#6d5e48"/>
+  <rect x="394" y="1068" width="258" height="12" fill="#fff"/>
+  <circle cx="490" cy="1010" r="32" fill="rgba(0,0,0,0.06)"/>
+  <circle cx="580" cy="990" r="20" fill="rgba(0,0,0,0.08)"/>
+  <rect x="394" y="1040" width="258" height="40" fill="rgba(0,0,0,0.06)"/>
+  <text x="410" y="1108" font-family="Outfit, sans-serif" font-size="11" font-weight="600" fill="#1e1c19">Hand Lens</text>
+  <text x="614" y="1108" font-family="Outfit, sans-serif" font-size="10" fill="#a09d96" text-anchor="end">Sol 1041</text>
+
+  <g filter="url(#softShadow)">
+    <rect x="668" y="930" width="196" height="200" rx="12" fill="#fff"/>
+  </g>
+  <rect x="668" y="930" width="196" height="150" rx="12" fill="#95805e"/>
+  <rect x="668" y="1068" width="196" height="12" fill="#fff"/>
+  <circle cx="750" cy="1010" r="30" fill="rgba(0,0,0,0.05)"/>
+  <circle cx="810" cy="980" r="16" fill="rgba(0,0,0,0.07)"/>
+  <rect x="668" y="1045" width="196" height="35" fill="rgba(0,0,0,0.06)"/>
+  <text x="684" y="1108" font-family="Outfit, sans-serif" font-size="11" font-weight="600" fill="#1e1c19">Rear Haz</text>
+  <text x="826" y="1108" font-family="Outfit, sans-serif" font-size="10" fill="#a09d96" text-anchor="end">Sol 1041</text>
+
+  <!-- ── Right Sidebar ── -->
+
+  <!-- ── Asteroid Tracker ── -->
+  <g filter="url(#cardGlow)">
+    <rect x="910" y="576" width="410" height="380" rx="16" fill="#fff" stroke="#eae7e2" stroke-width="1"/>
+  </g>
+
+  <text x="942" y="610" font-family="Outfit, sans-serif" font-size="10" font-weight="600" fill="#e07a5f" letter-spacing="2">☄️ HLÍDAČ ASTEROIDŮ</text>
+
+  <text x="942" y="642" font-family="Instrument Serif, serif" font-size="22" fill="#1e1c19">Dnes: 29. března 2026</text>
+  <line x1="942" y1="660" x2="1288" y2="660" stroke="#eae7e2" stroke-width="1"/>
+
+  <!-- Asteroid 1 -->
+  <rect x="942" y="680" width="266" height="72" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+  <circle cx="968" cy="716" r="10" fill="#22c55e" opacity="0.15"/>
+  <circle cx="968" cy="716" r="4" fill="#22c55e"/>
+  <text x="990" y="708" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#1e1c19">2024 AB</text>
+  <rect x="1090" y="696" width="66" height="20" rx="10" fill="#dcfce7"/>
+  <text x="1123" y="710" font-family="Outfit, sans-serif" font-size="9" font-weight="600" fill="#16a34a" text-anchor="middle">Bezpečný</text>
+  <text x="990" y="730" font-family="Outfit, sans-serif" font-size="11" fill="#78756e">Vzdálenost: 2.1 LD  ·  Ø 120 m</text>
+
+  <!-- Asteroid 2 -->
+  <rect x="942" y="766" width="266" height="72" rx="10" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+  <circle cx="968" cy="802" r="10" fill="#22c55e" opacity="0.15"/>
+  <circle cx="968" cy="802" r="4" fill="#22c55e"/>
+  <text x="990" y="794" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#1e1c19">2026 XY</text>
+  <rect x="1090" y="782" width="66" height="20" rx="10" fill="#dcfce7"/>
+  <text x="1123" y="796" font-family="Outfit, sans-serif" font-size="9" font-weight="600" fill="#16a34a" text-anchor="middle">Bezpečný</text>
+  <text x="990" y="816" font-family="Outfit, sans-serif" font-size="11" fill="#78756e">Vzdálenost: 4.5 LD  ·  Ø 45 m</text>
+
+  <!-- Asteroid 3 -->
+  <rect x="942" y="852" width="266" height="72" rx="10" fill="#fffbeb" stroke="#fde68a" stroke-width="1"/>
+  <circle cx="968" cy="888" r="10" fill="#f59e0b" opacity="0.15"/>
+  <circle cx="968" cy="888" r="4" fill="#f59e0b"/>
+  <text x="990" y="880" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#1e1c19">2025 QR7</text>
+  <rect x="1090" y="868" width="66" height="20" rx="10" fill="#fef3c7"/>
+  <text x="1123" y="882" font-family="Outfit, sans-serif" font-size="9" font-weight="600" fill="#d97706" text-anchor="middle">Sledovat</text>
+  <text x="990" y="902" font-family="Outfit, sans-serif" font-size="11" fill="#78756e">Vzdálenost: 0.8 LD  ·  Ø 310 m</text>
+
+  <!-- Radar button -->
+  <rect x="942" y="938" width="266" height="0" rx="0" fill="none"/>
+
+  <!-- ── EPIC Earth Card ── -->
+  <g filter="url(#cardGlow)">
+    <rect x="910" y="980" width="410" height="270" rx="16" fill="#fff" stroke="#eae7e2" stroke-width="1"/>
+  </g>
+
+  <text x="942" y="1016" font-family="Outfit, sans-serif" font-size="10" font-weight="600" fill="#2d6a4f" letter-spacing="2">🌍 ŽIVÁ ZEMĚ — EPIC</text>
+
+  <!-- Earth visualization -->
+  <circle cx="1115" cy="1140" r="80" fill="url(#earthGrad)"/>
+  <!-- Continents suggestion -->
+  <ellipse cx="1090" cy="1120" rx="30" ry="25" fill="#40916c" opacity="0.4" transform="rotate(-10 1090 1120)"/>
+  <ellipse cx="1140" cy="1145" rx="20" ry="30" fill="#2d6a4f" opacity="0.3" transform="rotate(15 1140 1145)"/>
+  <ellipse cx="1100" cy="1160" rx="15" ry="12" fill="#52b788" opacity="0.3"/>
+  <!-- Atmosphere glow -->
+  <circle cx="1115" cy="1140" r="82" fill="none" stroke="#74c0fc" stroke-width="2" opacity="0.15"/>
+  <circle cx="1115" cy="1140" r="86" fill="none" stroke="#74c0fc" stroke-width="1" opacity="0.08"/>
+  <!-- Cloud wisps -->
+  <ellipse cx="1085" cy="1115" rx="25" ry="6" fill="#fff" opacity="0.15" transform="rotate(-5 1085 1115)"/>
+  <ellipse cx="1140" cy="1155" rx="20" ry="5" fill="#fff" opacity="0.12" transform="rotate(8 1140 1155)"/>
+
+  <!-- Play button -->
+  <rect x="942" y="1230" width="150" height="0" rx="0" fill="none"/>
+
+  <!-- Rotate button -->
+  <rect x="1035" y="1130" width="40" height="40" rx="20" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+  <text x="1055" y="1156" font-family="Outfit, sans-serif" font-size="16" fill="#fff" text-anchor="middle">▶</text>
+
+  <text x="1115" y="1235" font-family="Outfit, sans-serif" font-size="11" fill="#78756e" text-anchor="middle">Přehrát rotaci →</text>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- QUICK STATS BAR                            -->
+  <!-- ══════════════════════════════════════════ -->
+  <g filter="url(#softShadow)">
+    <rect x="120" y="1190" width="744" height="80" rx="14" fill="#0d0b1a"/>
+  </g>
+
+  <g>
+    <text x="188" y="1226" font-family="Instrument Serif, serif" font-size="22" fill="#f5f3f0">1,198,204</text>
+    <text x="188" y="1248" font-family="Outfit, sans-serif" font-size="9" font-weight="600" fill="#6c5ce7" letter-spacing="1.2">CELKEM FOTEK</text>
+  </g>
+
+  <line x1="370" y1="1210" x2="370" y2="1250" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+
+  <g>
+    <text x="420" y="1226" font-family="Instrument Serif, serif" font-size="22" fill="#f5f3f0">4</text>
+    <text x="420" y="1248" font-family="Outfit, sans-serif" font-size="9" font-weight="600" fill="#c45a3c" letter-spacing="1.2">AKTIVNÍ MISE</text>
+  </g>
+
+  <line x1="550" y1="1210" x2="550" y2="1250" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+
+  <g>
+    <text x="600" y="1226" font-family="Instrument Serif, serif" font-size="22" fill="#f5f3f0">12</text>
+    <text x="600" y="1248" font-family="Outfit, sans-serif" font-size="9" font-weight="600" fill="#22c55e" letter-spacing="1.2">NEO DNES</text>
+  </g>
+
+  <line x1="720" y1="1210" x2="720" y2="1250" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+
+  <g>
+    <text x="770" y="1226" font-family="Instrument Serif, serif" font-size="22" fill="#f5f3f0">29.3.</text>
+    <text x="770" y="1248" font-family="Outfit, sans-serif" font-size="9" font-weight="600" fill="#78756e" letter-spacing="1.2">POSLEDNÍ EPIC</text>
+  </g>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- FOOTER                                     -->
+  <!-- ══════════════════════════════════════════ -->
+  <rect y="1320" width="1440" height="72" fill="#0d0b1a"/>
+
+  <text x="160" y="1356" font-family="Instrument Serif, serif" font-size="17" fill="#f5f3f0">AstroConnect</text>
+  <text x="160" y="1374" font-family="Outfit, sans-serif" font-size="10" fill="#4a4740">Powered by NASA Open APIs — APOD · Mars Rover Photos · NeoWs · EPIC</text>
+
+  <text x="1050" y="1362" font-family="Outfit, sans-serif" font-size="11" font-weight="500" fill="#4a4740">API Docs</text>
+  <text x="1140" y="1362" font-family="Outfit, sans-serif" font-size="11" font-weight="500" fill="#4a4740">GitHub</text>
+  <text x="1210" y="1362" font-family="Outfit, sans-serif" font-size="11" font-weight="500" fill="#4a4740">Kontakt</text>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- DESIGN SPEC SECTION                        -->
+  <!-- ══════════════════════════════════════════ -->
+  <rect y="1440" width="1440" height="1460" fill="#0d0b1a"/>
+
+  <text x="160" y="1510" font-family="Instrument Serif, serif" font-size="32" fill="#f5f3f0">Design Specifikace</text>
+  <line x1="160" y1="1536" x2="1280" y2="1536" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+
+  <!-- ── Colors ── -->
+  <text x="160" y="1585" font-family="Outfit, sans-serif" font-size="10" font-weight="600" fill="#6c5ce7" letter-spacing="2.5">BAREVNÁ PALETA</text>
+
+  <rect x="160" y="1606" width="56" height="56" rx="10" fill="#0d0b1a" stroke="#333" stroke-width="1"/>
+  <text x="188" y="1682" font-family="Outfit, sans-serif" font-size="9" fill="#78756e" text-anchor="middle">#0D0B1A</text>
+  <text x="188" y="1696" font-family="Outfit, sans-serif" font-size="8" fill="#4a4740" text-anchor="middle">Deep Space</text>
+
+  <rect x="232" y="1606" width="56" height="56" rx="10" fill="#6c5ce7"/>
+  <text x="260" y="1682" font-family="Outfit, sans-serif" font-size="9" fill="#78756e" text-anchor="middle">#6C5CE7</text>
+  <text x="260" y="1696" font-family="Outfit, sans-serif" font-size="8" fill="#4a4740" text-anchor="middle">Primary</text>
+
+  <rect x="304" y="1606" width="56" height="56" rx="10" fill="#a78bfa"/>
+  <text x="332" y="1682" font-family="Outfit, sans-serif" font-size="9" fill="#78756e" text-anchor="middle">#A78BFA</text>
+  <text x="332" y="1696" font-family="Outfit, sans-serif" font-size="8" fill="#4a4740" text-anchor="middle">Accent</text>
+
+  <rect x="376" y="1606" width="56" height="56" rx="10" fill="#c45a3c"/>
+  <text x="404" y="1682" font-family="Outfit, sans-serif" font-size="9" fill="#78756e" text-anchor="middle">#C45A3C</text>
+  <text x="404" y="1696" font-family="Outfit, sans-serif" font-size="8" fill="#4a4740" text-anchor="middle">Mars</text>
+
+  <rect x="448" y="1606" width="56" height="56" rx="10" fill="#22c55e"/>
+  <text x="476" y="1682" font-family="Outfit, sans-serif" font-size="9" fill="#78756e" text-anchor="middle">#22C55E</text>
+  <text x="476" y="1696" font-family="Outfit, sans-serif" font-size="8" fill="#4a4740" text-anchor="middle">Safe</text>
+
+  <rect x="520" y="1606" width="56" height="56" rx="10" fill="#f59e0b"/>
+  <text x="548" y="1682" font-family="Outfit, sans-serif" font-size="9" fill="#78756e" text-anchor="middle">#F59E0B</text>
+  <text x="548" y="1696" font-family="Outfit, sans-serif" font-size="8" fill="#4a4740" text-anchor="middle">Caution</text>
+
+  <rect x="592" y="1606" width="56" height="56" rx="10" fill="#f5f3f0" stroke="#333" stroke-width="1"/>
+  <text x="620" y="1682" font-family="Outfit, sans-serif" font-size="9" fill="#78756e" text-anchor="middle">#F5F3F0</text>
+  <text x="620" y="1696" font-family="Outfit, sans-serif" font-size="8" fill="#4a4740" text-anchor="middle">Background</text>
+
+  <rect x="664" y="1606" width="56" height="56" rx="10" fill="#2d6a4f"/>
+  <text x="692" y="1682" font-family="Outfit, sans-serif" font-size="9" fill="#78756e" text-anchor="middle">#2D6A4F</text>
+  <text x="692" y="1696" font-family="Outfit, sans-serif" font-size="8" fill="#4a4740" text-anchor="middle">Earth</text>
+
+  <!-- ── Typography ── -->
+  <text x="160" y="1760" font-family="Outfit, sans-serif" font-size="10" font-weight="600" fill="#6c5ce7" letter-spacing="2.5">TYPOGRAFIE</text>
+
+  <text x="160" y="1800" font-family="Instrument Serif, serif" font-size="30" fill="#f5f3f0">Instrument Serif</text>
+  <text x="160" y="1822" font-family="Outfit, sans-serif" font-size="11" fill="#4a4740">Nadpisy, display čísla, logo  ·  Regular 400</text>
+
+  <text x="160" y="1862" font-family="Outfit, sans-serif" font-size="22" font-weight="400" fill="#f5f3f0">Outfit — Light, Regular, Medium, Semibold</text>
+  <text x="160" y="1884" font-family="Outfit, sans-serif" font-size="11" fill="#4a4740">Body text, navigace, labely, metadata  ·  300 / 400 / 500 / 600</text>
+
+  <!-- ── Layout ── -->
+  <text x="160" y="1945" font-family="Outfit, sans-serif" font-size="10" font-weight="600" fill="#6c5ce7" letter-spacing="2.5">LAYOUT</text>
+
+  <text x="160" y="1978" font-family="Outfit, sans-serif" font-size="13" fill="#78756e">Max width: 1200px  ·  Side padding: 120px  ·  Gutter: 16px</text>
+  <text x="160" y="2002" font-family="Outfit, sans-serif" font-size="13" fill="#78756e">Hlavní obsah: 2/3 (744px)  ·  Sidebar: 1/3 (410px)  ·  Gap: 46px</text>
+  <text x="160" y="2026" font-family="Outfit, sans-serif" font-size="13" fill="#78756e">Card radius: 12–16px  ·  Button radius: 8–20px  ·  Badge radius: 10–13px</text>
+
+  <!-- ── Sections ── -->
+  <text x="160" y="2088" font-family="Outfit, sans-serif" font-size="10" font-weight="600" fill="#6c5ce7" letter-spacing="2.5">SEKCE APLIKACE</text>
+
+  <text x="160" y="2120" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#a78bfa">Hero — APOD</text>
+  <text x="160" y="2142" font-family="Outfit, sans-serif" font-size="13" fill="#78756e">Astronomy Picture of the Day. Full-width karta s tmavým pozadím, mlhovina efekt,</text>
+  <text x="160" y="2162" font-family="Outfit, sans-serif" font-size="13" fill="#78756e">gradient overlay pro čitelnost textu, CTA tlačítko. API: api.nasa.gov/planetary/apod</text>
+
+  <text x="160" y="2200" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#c45a3c">Mars Rover Photos</text>
+  <text x="160" y="2222" font-family="Outfit, sans-serif" font-size="13" fill="#78756e">Grid 3×2 s fotkami z Perseverance/Curiosity. Filtry: Sol číslo + výběr kamery.</text>
+  <text x="160" y="2242" font-family="Outfit, sans-serif" font-size="13" fill="#78756e">Hover efekt s overlay. API: api.nasa.gov/mars-photos/api/v1/rovers</text>
+
+  <text x="160" y="2280" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#22c55e">Hlídač asteroidů (NEO)</text>
+  <text x="160" y="2302" font-family="Outfit, sans-serif" font-size="13" fill="#78756e">Seznam Near Earth Objects pro dnešní den. Barevné statusy: zelený = bezpečný,</text>
+  <text x="160" y="2322" font-family="Outfit, sans-serif" font-size="13" fill="#78756e">žlutý = sledovat. Vzdálenost v LD (Lunar Distance). API: api.nasa.gov/neo/rest/v1/feed</text>
+
+  <text x="160" y="2360" font-family="Outfit, sans-serif" font-size="13" font-weight="600" fill="#40916c">Živá Země (EPIC)</text>
+  <text x="160" y="2382" font-family="Outfit, sans-serif" font-size="13" fill="#78756e">Vizualizace Země z kamery DSCOVR/EPIC. Animovaná rotace, atmosférický glow.</text>
+  <text x="160" y="2402" font-family="Outfit, sans-serif" font-size="13" fill="#78756e">API: api.nasa.gov/EPIC/api/natural</text>
+
+  <!-- ── NASA APIs ── -->
+  <text x="160" y="2464" font-family="Outfit, sans-serif" font-size="10" font-weight="600" fill="#6c5ce7" letter-spacing="2.5">POUŽITÁ NASA API</text>
+
+  <rect x="160" y="2486" width="1080" height="140" rx="12" fill="rgba(255,255,255,0.03)" stroke="rgba(255,255,255,0.06)" stroke-width="1"/>
+
+  <text x="200" y="2518" font-family="Outfit, sans-serif" font-size="12" font-weight="600" fill="#a78bfa">APOD</text>
+  <text x="200" y="2536" font-family="Outfit, sans-serif" font-size="11" fill="#4a4740">api.nasa.gov/planetary/apod</text>
+
+  <text x="520" y="2518" font-family="Outfit, sans-serif" font-size="12" font-weight="600" fill="#c45a3c">Mars Photos</text>
+  <text x="520" y="2536" font-family="Outfit, sans-serif" font-size="11" fill="#4a4740">api.nasa.gov/mars-photos/api/v1</text>
+
+  <text x="200" y="2576" font-family="Outfit, sans-serif" font-size="12" font-weight="600" fill="#22c55e">NeoWs</text>
+  <text x="200" y="2594" font-family="Outfit, sans-serif" font-size="11" fill="#4a4740">api.nasa.gov/neo/rest/v1/feed</text>
+
+  <text x="520" y="2576" font-family="Outfit, sans-serif" font-size="12" font-weight="600" fill="#40916c">EPIC</text>
+  <text x="520" y="2594" font-family="Outfit, sans-serif" font-size="11" fill="#4a4740">api.nasa.gov/EPIC/api/natural</text>
+
+  <!-- ── Interactions ── -->
+  <text x="160" y="2680" font-family="Outfit, sans-serif" font-size="10" font-weight="600" fill="#6c5ce7" letter-spacing="2.5">INTERAKCE</text>
+
+  <text x="160" y="2712" font-family="Outfit, sans-serif" font-size="13" fill="#78756e">Photo card hover: translateY(-4px) + box-shadow zvýraznění + overlay s expand ikonou</text>
+  <text x="160" y="2736" font-family="Outfit, sans-serif" font-size="13" fill="#78756e">Entry animace: staggered fadeUp na kartách  ·  Hero: parallax nebula efekt na scrollu</text>
+  <text x="160" y="2760" font-family="Outfit, sans-serif" font-size="13" fill="#78756e">EPIC Země: plynulá rotace animace (CSS transform)  ·  Asteroid list: real-time refresh</text>
+  <text x="160" y="2784" font-family="Outfit, sans-serif" font-size="13" fill="#78756e">Nav: sticky s backdrop-filter blur  ·  APOD: lightbox pro fullscreen zobrazení</text>
+
+  <!-- Tech stack note -->
+  <text x="160" y="2850" font-family="Outfit, sans-serif" font-size="10" font-weight="600" fill="#6c5ce7" letter-spacing="2.5">DOPORUČENÝ STACK</text>
+  <text x="160" y="2880" font-family="Outfit, sans-serif" font-size="13" fill="#78756e">React + Vite  ·  Tailwind CSS  ·  TanStack Query  ·  React Router  ·  Vercel deploy</text>
+
+</svg>
