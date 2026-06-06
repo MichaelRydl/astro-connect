@@ -1,19 +1,32 @@
-import type { MarsPhoto } from "../data/mock";
+import type { MarsPhoto } from "../api/mars";
+
+export function PhotoCardSkeleton() {
+  return (
+    <div className="overflow-hidden rounded-xl bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)]">
+      <div className="aspect-[3/2] w-full animate-pulse bg-stroke" />
+      <div className="flex items-center justify-between px-4 py-3">
+        <span className="h-3 w-20 animate-pulse rounded bg-stroke" />
+        <span className="h-3 w-12 animate-pulse rounded bg-stroke" />
+      </div>
+    </div>
+  );
+}
 
 export default function PhotoCard({ photo }: { photo: MarsPhoto }) {
   return (
-    <figure className="group overflow-hidden rounded-xl bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_28px_rgba(0,0,0,0.14)]">
-      {/* Plocha snímku (placeholder, než se napojí API) */}
-      <div
-        className="relative aspect-[3/2] w-full overflow-hidden"
-        style={{
-          background: `radial-gradient(120% 100% at 30% 25%, ${photo.tone} 0%, rgba(0,0,0,0.35) 120%)`,
-        }}
-      >
-        {/* Náznak terénu */}
-        <span className="absolute left-[18%] top-[40%] size-20 rounded-full bg-black/10 blur-md" />
-        <span className="absolute right-[12%] top-[55%] size-12 rounded-full bg-black/15 blur-md" />
-        <span className="absolute inset-x-0 bottom-0 h-1/4 bg-black/10" />
+    <a
+      href={photo.img_src}
+      target="_blank"
+      rel="noreferrer"
+      className="group block overflow-hidden rounded-xl bg-white shadow-[0_4px_20px_rgba(0,0,0,0.08)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_12px_28px_rgba(0,0,0,0.14)]"
+    >
+      <div className="relative aspect-[3/2] w-full overflow-hidden bg-ink/10">
+        <img
+          src={photo.img_src}
+          alt={`${photo.camera.full_name} — Sol ${photo.sol}`}
+          loading="lazy"
+          className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+        />
 
         {/* Hover overlay s ikonou zvětšení */}
         <div className="absolute inset-0 flex items-center justify-center bg-deep-space/40 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
@@ -31,11 +44,12 @@ export default function PhotoCard({ photo }: { photo: MarsPhoto }) {
         </div>
       </div>
 
-      {/* Popisek */}
-      <figcaption className="flex items-center justify-between px-4 py-3">
-        <span className="text-[11px] font-semibold text-ink">{photo.camera}</span>
-        <span className="text-[10px] text-muted-soft">{photo.sol}</span>
-      </figcaption>
-    </figure>
+      <div className="flex items-center justify-between px-4 py-3">
+        <span className="truncate text-[11px] font-semibold text-ink">
+          {photo.camera.full_name}
+        </span>
+        <span className="shrink-0 pl-2 text-[10px] text-muted-soft">Sol {photo.sol}</span>
+      </div>
+    </a>
   );
 }

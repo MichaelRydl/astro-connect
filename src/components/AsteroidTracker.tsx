@@ -1,7 +1,9 @@
-import { neoObjects, today, type NeoObject } from "../data/mock";
+import { useNeoFeed } from "../hooks/queries";
+import { formatCzDate, todayIso } from "../lib/format";
+import type { Neo } from "../api/neo";
 
 const statusStyles: Record<
-  NeoObject["status"],
+  Neo["status"],
   { card: string; dotRing: string; dot: string; badge: string }
 > = {
   safe: {
@@ -18,7 +20,7 @@ const statusStyles: Record<
   },
 };
 
-function NeoRow({ neo }: { neo: NeoObject }) {
+function NeoRow({ neo }: { neo: Neo }) {
   const s = statusStyles[neo.status];
   return (
     <li className={`flex items-center gap-3 rounded-[10px] border px-3.5 py-3 ${s.card}`}>
@@ -28,20 +30,35 @@ function NeoRow({ neo }: { neo: NeoObject }) {
 
       <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between gap-2">
-          <span className="text-[13px] font-semibold text-ink">{neo.name}</span>
-          <span className={`rounded-full px-2.5 py-0.5 text-[9px] font-semibold ${s.badge}`}>
+          <span className="truncate text-[13px] font-semibold text-ink">{neo.name}</span>
+          <span className={`shrink-0 rounded-full px-2.5 py-0.5 text-[9px] font-semibold ${s.badge}`}>
             {neo.statusLabel}
           </span>
         </div>
         <p className="mt-1 text-[11px] text-muted">
-          Vzdálenost: {neo.distanceLd} &nbsp;·&nbsp; Ø {neo.diameter}
+          Vzdálenost: {neo.distanceLd} &nbsp;·&nbsp; Ø {neo.diameterM} m
         </p>
       </div>
     </li>
   );
 }
 
+function RowSkeleton() {
+  return (
+    <li className="flex items-center gap-3 rounded-[10px] border border-hairline px-3.5 py-3">
+      <span className="size-5 shrink-0 animate-pulse rounded-full bg-stroke" />
+      <div className="flex-1 space-y-2">
+        <span className="block h-3 w-24 animate-pulse rounded bg-stroke" />
+        <span className="block h-3 w-40 animate-pulse rounded bg-stroke" />
+      </div>
+    </li>
+  );
+}
+
 export default function AsteroidTracker() {
+  const { data, isLoading, isError } = useNeoFeed();
+  const objects = data?.objects.slice(0, 4) ?? [];
+
   return (
     <section
       aria-labelledby="neo-heading"
@@ -52,16 +69,26 @@ export default function AsteroidTracker() {
       </p>
 
       <h2 id="neo-heading" className="mt-3 font-serif text-[22px] text-ink">
-        Dnes: {today}
+        Dnes: {formatCzDate(todayIso())}
       </h2>
 
       <hr className="my-4 border-hairline" />
 
       <ul className="flex flex-col gap-3">
-        {neoObjects.map((neo) => (
-          <NeoRow key={neo.id} neo={neo} />
-        ))}
+        {isLoading && Array.from({ length: 3 }).map((_, i) => <RowSkeleton key={i} />)}
+        {!isLoading && objects.map((neo) => <NeoRow key={neo.id} neo={neo} />)}
       </ul>
+
+      {isError && (
+        <p role="status" className="text-xs text-muted">
+          Data o asteroidech se nepodařilo načíst.
+        </p>
+      )}
+      {!isLoading && !isError && objects.length === 0 && (
+        <p role="status" className="text-xs text-muted">
+          Pro dnešní den nejsou hlášené žádné blízké objekty.
+        </p>
+      )}
     </section>
   );
 }

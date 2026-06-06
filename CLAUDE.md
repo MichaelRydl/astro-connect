@@ -13,11 +13,14 @@ several NASA Open APIs:
 - **EPIC** — Earth Polychromatic Imaging Camera
 - **Mars Rover Photos** — Perseverance/Curiosity imagery (Mast Cam, Haz cams, etc.)
 
-> **Current state:** the **static UI is built** to match `astroconnect-design.svg`
-> (navbar, APOD hero, Mars Rover grid, asteroid tracker, EPIC Earth, stats bar,
-> footer). It renders hardcoded content from `src/data/mock.ts` — no NASA APIs
-> are wired up yet. The next step is replacing the mock data with live data via
-> TanStack Query. Treat the design SVG as the source of truth for look & layout.
+> **Current state:** the UI is built to match `astroconnect-design.svg` and is
+> **wired to live NASA Open APIs** via TanStack Query (APOD, Mars Rover Photos,
+> NeoWs, EPIC). Each section handles loading (skeletons), error, and empty
+> states. Filters in the Mars section are display-only for now. Treat the design
+> SVG as the source of truth for look & layout.
+>
+> Requires a NASA API key in `VITE_NASA_API_KEY` (see `.env.example`); falls back
+> to `DEMO_KEY`, which has tight rate limits (~30 req/hour).
 
 ## Tech stack
 
@@ -31,28 +34,42 @@ several NASA Open APIs:
 | Client state   | Zustand v5                              |
 | Linting        | ESLint 9 (flat config) + typescript-eslint |
 
-> Note: TanStack Query and Zustand are installed but **not yet wired up**. When
-> adding data fetching, use TanStack Query for NASA API calls; use Zustand for
-> shared client-side UI state.
+> Note: TanStack Query **is wired up** (`QueryClientProvider` in `main.tsx`,
+> client in `src/lib/queryClient.ts`) and handles all NASA API fetching. Zustand
+> is installed but **not yet used** — reach for it when shared client-side UI
+> state appears (e.g. live Mars filters, an APOD lightbox).
 
 ## Project layout
 
 ```
 .
 ├── index.html              # Vite entry; mounts #root, loads Google Fonts
+├── .env.example            # VITE_NASA_API_KEY (copy to .env)
 ├── src/
-│   ├── main.tsx            # React root (StrictMode); imports index.css
+│   ├── main.tsx            # React root + QueryClientProvider; imports index.css
 │   ├── App.tsx             # Page composition (layout grid: main 2/3 + sidebar 1/3)
 │   ├── index.css           # Tailwind import + @theme tokens + animations
-│   ├── data/mock.ts        # Hardcoded design content + types (swap for APIs)
+│   ├── vite-env.d.ts       # Typed import.meta.env (VITE_NASA_API_KEY)
+│   ├── lib/
+│   │   ├── nasa.ts             # nasaFetch helper, API key, NasaError
+│   │   ├── format.ts           # cs-CZ date formatting, todayIso()
+│   │   └── queryClient.ts      # TanStack Query client + defaults
+│   ├── api/                # One module per NASA API: fetcher + types
+│   │   ├── apod.ts             # Astronomy Picture of the Day
+│   │   ├── mars.ts             # Perseverance latest_photos
+│   │   ├── neo.ts              # NeoWs feed → mapped/sorted Neo[]
+│   │   └── epic.ts             # EPIC natural images + image URL builder
+│   ├── hooks/queries.ts    # useApod/useMarsPhotos/useNeoFeed/useEpic (shared keys)
+│   ├── data/fallback.ts    # APOD fallback content on error
 │   └── components/         # Presentational UI components
 │       ├── Navbar.tsx          # Sticky top nav + logo
-│       ├── Hero.tsx            # APOD hero (nebula bg, stars, CTA)
+│       ├── Hero.tsx            # APOD hero (real image bg, loading/error states)
 │       ├── MarsSection.tsx     # Mars header + filters + photo grid
-│       ├── PhotoCard.tsx       # Single Mars photo card (hover overlay)
+│       ├── PhotoCard.tsx       # Mars photo card (+ skeleton); links to img_src
 │       ├── AsteroidTracker.tsx # NeoWs list with safe/caution statuses
-│       ├── EpicCard.tsx        # EPIC Earth visualization (SVG)
-│       ├── StatsBar.tsx        # Dark quick-stats strip
+│       ├── EpicCard.tsx        # EPIC Earth: cycles day's frames as rotation
+│       ├── StatsBar.tsx        # Dark quick-stats strip (NEO/EPIC live)
+│       ├── ErrorNote.tsx       # Reusable inline error message
 │       └── Footer.tsx          # Footer + links
 ├── public/                 # Static assets served at / (favicon.svg, icons.svg)
 ├── astroconnect-design.svg # Design spec: layout, typography, color palette
@@ -107,10 +124,16 @@ before considering a change done.
   "Kontakt"). Follow the design's language for user-facing strings.
 
 ### State & data
-- Wrap data fetching in TanStack Query hooks (`useQuery`/`useMutation`). NASA
-  APIs typically require an API key — read it from a Vite env var
-  (`import.meta.env.VITE_*`) and keep secrets out of the repo (`.env` is
-  gitignored; `dotenv` is a dependency).
+- All NASA fetching goes through one fetcher (`src/lib/nasa.ts`), one module per
+  API in `src/api/`, and shared `useQuery` hooks in `src/hooks/queries.ts`.
+  **Define each query once in `hooks/queries.ts`** so components reading the same
+  data (e.g. a section and `StatsBar`) share a query key and hit the cache — do
+  not call `useQuery` ad hoc in components.
+- The API key is read from `import.meta.env.VITE_NASA_API_KEY` (typed in
+  `src/vite-env.d.ts`), falling back to `DEMO_KEY`. Keep real keys in `.env`
+  (gitignored); document new vars in `.env.example`.
+- Every data-driven section must handle loading (skeletons), error, and empty
+  states — follow the existing components.
 - Use Zustand stores for cross-component client state; keep server data in
   TanStack Query, not duplicated into Zustand.
 

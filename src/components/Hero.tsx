@@ -1,6 +1,8 @@
-import { apod } from "../data/mock";
+import { useApod } from "../hooks/queries";
+import { apodFallback } from "../data/fallback";
+import { formatCzDate } from "../lib/format";
 
-// Statické rozmístění hvězd v pozadí mlhoviny.
+// Statické rozmístění hvězd pro pozadí mlhoviny (zobrazí se, dokud není snímek).
 const stars = [
   { x: 18, y: 18, s: 3, o: 0.7 },
   { x: 32, y: 28, s: 2, o: 0.5 },
@@ -17,29 +19,54 @@ const stars = [
   { x: 60, y: 72, s: 2.6, o: 0.4 },
 ];
 
+function Stars() {
+  return (
+    <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+      {stars.map((star, i) => (
+        <span
+          key={i}
+          className="star star-twinkle"
+          style={{
+            left: `${star.x}%`,
+            top: `${star.y}%`,
+            width: star.s,
+            height: star.s,
+            opacity: star.o,
+            animationDelay: `${(i % 5) * 0.7}s`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function Hero() {
+  const { data, isLoading, isError } = useApod();
+
+  // Obsah: živá data, jinak fallback. U videa necháme pozadí mlhoviny.
+  const isImage = data?.media_type === "image";
+  const bgImage = isImage ? (data.hdurl ?? data.url) : undefined;
+  const title = data?.title ?? apodFallback.title;
+  const description = data?.explanation ?? apodFallback.explanation;
+  const date = data?.date ?? apodFallback.date;
+  const credit = data?.copyright?.trim() ?? (isError ? apodFallback.credit : "NASA");
+  const link = data?.url;
+
   return (
     <section
       aria-label="Snímek dne"
       className="hero-bg fade-up relative overflow-hidden rounded-[20px] shadow-[0_4px_24px_rgba(0,0,0,0.12)]"
     >
-      {/* Hvězdy */}
-      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
-        {stars.map((star, i) => (
-          <span
-            key={i}
-            className="star star-twinkle"
-            style={{
-              left: `${star.x}%`,
-              top: `${star.y}%`,
-              width: star.s,
-              height: star.s,
-              opacity: star.o,
-              animationDelay: `${(i % 5) * 0.7}s`,
-            }}
-          />
-        ))}
-      </div>
+      {/* Skutečný snímek APOD jako pozadí */}
+      {bgImage && (
+        <img
+          src={bgImage}
+          alt={title}
+          className="absolute inset-0 size-full object-cover"
+        />
+      )}
+
+      {!bgImage && <Stars />}
 
       {/* Overlay vlevo pro čitelnost */}
       <div className="hero-overlay pointer-events-none absolute inset-0" aria-hidden="true" />
@@ -47,27 +74,38 @@ export default function Hero() {
       {/* Obsah */}
       <div className="relative flex min-h-[440px] flex-col justify-center px-8 py-12 sm:px-12">
         <span className="inline-flex w-fit items-center rounded-full border border-accent/30 bg-primary/20 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-accent">
-          {apod.badge}
+          Snímek dne
         </span>
 
-        <h1 className="mt-6 font-serif text-4xl text-canvas sm:text-5xl">
-          {apod.title}
-        </h1>
+        {isLoading ? (
+          <div className="mt-6 max-w-xl animate-pulse space-y-4">
+            <div className="h-10 w-2/3 rounded-lg bg-white/15" />
+            <div className="h-4 w-full rounded bg-white/10" />
+            <div className="h-4 w-4/5 rounded bg-white/10" />
+            <div className="h-10 w-32 rounded-full bg-white/15" />
+          </div>
+        ) : (
+          <>
+            <h1 className="mt-6 font-serif text-4xl text-canvas sm:text-5xl">{title}</h1>
 
-        <p className="mt-4 max-w-xl text-sm font-light leading-relaxed text-canvas/60">
-          {apod.description}
-        </p>
+            <p className="mt-4 line-clamp-2 max-w-xl text-sm font-light leading-relaxed text-canvas/60">
+              {description}
+            </p>
 
-        <button
-          type="button"
-          className="mt-7 inline-flex w-fit items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-2.5 text-[13px] font-semibold text-white transition-transform hover:scale-[1.03]"
-        >
-          Číst dál <span aria-hidden="true">→</span>
-        </button>
+            <a
+              href={link ?? "#"}
+              target={link ? "_blank" : undefined}
+              rel="noreferrer"
+              className="mt-7 inline-flex w-fit items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-2.5 text-[13px] font-semibold text-white transition-transform hover:scale-[1.03]"
+            >
+              Číst dál <span aria-hidden="true">→</span>
+            </a>
 
-        <p className="mt-10 text-[11px] text-canvas/30">
-          {apod.date} &nbsp;·&nbsp; {apod.credit}
-        </p>
+            <p className="mt-10 text-[11px] text-canvas/30">
+              {formatCzDate(date)} &nbsp;·&nbsp; {credit}
+            </p>
+          </>
+        )}
       </div>
     </section>
   );
