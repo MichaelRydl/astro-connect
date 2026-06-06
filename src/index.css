@@ -1,0 +1,132 @@
+@import "tailwindcss";
+
+/* ──────────────────────────────────────────────
+   AstroConnect — design tokens (viz astroconnect-design.svg)
+   ────────────────────────────────────────────── */
+@theme {
+  --font-sans: "Outfit", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
+
+  /* Barevná paleta */
+  --color-deep-space: #0d0b1a;
+  --color-space-violet: #1a1035;
+  --color-space-blue: #0f1928;
+  --color-primary: #6c5ce7;
+  --color-accent: #a78bfa;
+  --color-mars: #c45a3c;
+  --color-mars-light: #e07a5f;
+  --color-safe: #22c55e;
+  --color-caution: #f59e0b;
+  --color-earth-deep: #1b4965;
+  --color-earth: #2d6a4f;
+  --color-earth-light: #40916c;
+
+  /* Plochy a text */
+  --color-canvas: #f5f3f0;
+  --color-ink: #1e1c19;
+  --color-muted: #78756e;
+  --color-muted-soft: #a09d96;
+  --color-hairline: #eae7e2;
+  --color-stroke: #e0ddd8;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background-color: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ──────────────────────────────────────────────
+   Hero (APOD) — pozadí mlhoviny
+   ────────────────────────────────────────────── */
+.hero-bg {
+  background:
+    radial-gradient(
+      70% 90% at 60% 40%,
+      rgba(167, 139, 250, 0.28) 0%,
+      rgba(108, 92, 231, 0.18) 32%,
+      rgba(196, 90, 60, 0.12) 60%,
+      transparent 100%
+    ),
+    linear-gradient(135deg, #0d0b1a 0%, #1a1035 40%, #0f1928 100%);
+}
+
+/* Gradient overlay vlevo pro čitelnost textu */
+.hero-overlay {
+  background: linear-gradient(
+    90deg,
+    rgba(13, 11, 26, 0.92) 0%,
+    rgba(13, 11, 26, 0.55) 38%,
+    rgba(13, 11, 26, 0.1) 70%,
+    transparent 100%
+  );
+}
+
+.star {
+  position: absolute;
+  border-radius: 9999px;
+  background: #fff;
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.star-twinkle {
+  animation: twinkle 4s ease-in-out infinite;
+}
+
+/* ──────────────────────────────────────────────
+   Entry animace — staggered fadeUp
+   ────────────────────────────────────────────── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fadeUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ──────────────────────────────────────────────
+   EPIC — rotace Země
+   ────────────────────────────────────────────── */
+@keyframes spin-slow {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.earth-rotate {
+  animation: spin-slow 40s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .star-twinkle,
+  .fade-up,
+  .earth-rotate {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
+}

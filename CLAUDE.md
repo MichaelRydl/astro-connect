@@ -13,10 +13,11 @@ several NASA Open APIs:
 - **EPIC** — Earth Polychromatic Imaging Camera
 - **Mars Rover Photos** — Perseverance/Curiosity imagery (Mast Cam, Haz cams, etc.)
 
-> **Current state:** the repository is a fresh Vite scaffold. `src/App.tsx`
-> renders only a "Hello World" placeholder. The dependencies and design are in
-> place but the application features have **not** been built yet. Treat the
-> design SVG as the source of truth for intended look, layout, and feature set.
+> **Current state:** the **static UI is built** to match `astroconnect-design.svg`
+> (navbar, APOD hero, Mars Rover grid, asteroid tracker, EPIC Earth, stats bar,
+> footer). It renders hardcoded content from `src/data/mock.ts` — no NASA APIs
+> are wired up yet. The next step is replacing the mock data with live data via
+> TanStack Query. Treat the design SVG as the source of truth for look & layout.
 
 ## Tech stack
 
@@ -38,11 +39,21 @@ several NASA Open APIs:
 
 ```
 .
-├── index.html              # Vite entry; mounts #root, loads src/main.tsx
+├── index.html              # Vite entry; mounts #root, loads Google Fonts
 ├── src/
-│   ├── main.tsx            # React root (StrictMode) → renders <App/>
-│   ├── App.tsx             # Root component (currently a placeholder)
-│   └── App.css             # @import "tailwindcss";
+│   ├── main.tsx            # React root (StrictMode); imports index.css
+│   ├── App.tsx             # Page composition (layout grid: main 2/3 + sidebar 1/3)
+│   ├── index.css           # Tailwind import + @theme tokens + animations
+│   ├── data/mock.ts        # Hardcoded design content + types (swap for APIs)
+│   └── components/         # Presentational UI components
+│       ├── Navbar.tsx          # Sticky top nav + logo
+│       ├── Hero.tsx            # APOD hero (nebula bg, stars, CTA)
+│       ├── MarsSection.tsx     # Mars header + filters + photo grid
+│       ├── PhotoCard.tsx       # Single Mars photo card (hover overlay)
+│       ├── AsteroidTracker.tsx # NeoWs list with safe/caution statuses
+│       ├── EpicCard.tsx        # EPIC Earth visualization (SVG)
+│       ├── StatsBar.tsx        # Dark quick-stats strip
+│       └── Footer.tsx          # Footer + links
 ├── public/                 # Static assets served at / (favicon.svg, icons.svg)
 ├── astroconnect-design.svg # Design spec: layout, typography, color palette
 ├── vite.config.ts          # Vite plugins: react() + tailwindcss()
