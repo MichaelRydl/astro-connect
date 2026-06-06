@@ -16,8 +16,9 @@ several NASA Open APIs:
 > **Current state:** the UI is built to match `astroconnect-design.svg` and is
 > **wired to live NASA Open APIs** via TanStack Query (APOD, Mars Rover Photos,
 > NeoWs, EPIC). Each section handles loading (skeletons), error, and empty
-> states. Filters in the Mars section are display-only for now. Treat the design
-> SVG as the source of truth for look & layout.
+> states. The Mars **sol + camera filters are functional** (Zustand-backed), the
+> APOD hero opens a **lightbox**, and an **error boundary** wraps the app. Treat
+> the design SVG as the source of truth for look & layout.
 >
 > Requires a NASA API key in `VITE_NASA_API_KEY` (see `.env.example`); falls back
 > to `DEMO_KEY`, which has tight rate limits (~30 req/hour).
@@ -36,8 +37,7 @@ several NASA Open APIs:
 
 > Note: TanStack Query **is wired up** (`QueryClientProvider` in `main.tsx`,
 > client in `src/lib/queryClient.ts`) and handles all NASA API fetching. Zustand
-> is installed but **not yet used** — reach for it when shared client-side UI
-> state appears (e.g. live Mars filters, an APOD lightbox).
+> holds client UI state — currently the Mars filters (`src/store/marsFilters.ts`).
 
 ## Project layout
 
@@ -59,17 +59,21 @@ several NASA Open APIs:
 │   │   ├── mars.ts             # Perseverance latest_photos
 │   │   ├── neo.ts              # NeoWs feed → mapped/sorted Neo[]
 │   │   └── epic.ts             # EPIC natural images + image URL builder
-│   ├── hooks/queries.ts    # useApod/useMarsPhotos/useNeoFeed/useEpic (shared keys)
+│   ├── hooks/queries.ts    # useApod/useMarsPhotos[BySol]/useNeoFeed/useEpic
+│   ├── store/marsFilters.ts # Zustand: selected sol + camera
 │   ├── data/fallback.ts    # APOD fallback content on error
 │   └── components/         # Presentational UI components
 │       ├── Navbar.tsx          # Sticky top nav + logo
-│       ├── Hero.tsx            # APOD hero (real image bg, loading/error states)
-│       ├── MarsSection.tsx     # Mars header + filters + photo grid
+│       ├── Hero.tsx            # APOD hero (real image bg) + lightbox trigger
+│       ├── Lightbox.tsx        # Fullscreen APOD modal (Esc/backdrop close)
+│       ├── MarsSection.tsx     # Mars header + functional filters + photo grid
 │       ├── PhotoCard.tsx       # Mars photo card (+ skeleton); links to img_src
+│       ├── Dropdown.tsx        # Reusable filter dropdown (outside-click/Esc)
 │       ├── AsteroidTracker.tsx # NeoWs list with safe/caution statuses
 │       ├── EpicCard.tsx        # EPIC Earth: cycles day's frames as rotation
 │       ├── StatsBar.tsx        # Dark quick-stats strip (NEO/EPIC live)
 │       ├── ErrorNote.tsx       # Reusable inline error message
+│       ├── ErrorBoundary.tsx   # App-level render error fallback
 │       └── Footer.tsx          # Footer + links
 ├── public/                 # Static assets served at / (favicon.svg, icons.svg)
 ├── astroconnect-design.svg # Design spec: layout, typography, color palette

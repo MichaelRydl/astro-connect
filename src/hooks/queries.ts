@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchApod } from "../api/apod";
-import { fetchMarsLatest } from "../api/mars";
+import { fetchMarsLatest, fetchMarsPhotosBySol } from "../api/mars";
 import { fetchNeoFeed } from "../api/neo";
 import { fetchEpicNatural } from "../api/epic";
 import { todayIso } from "../lib/format";
@@ -18,6 +18,15 @@ export function useMarsPhotos() {
   return useQuery({
     queryKey: ["mars", "perseverance", "latest"],
     queryFn: fetchMarsLatest,
+    staleTime: HOUR,
+  });
+}
+
+export function useMarsPhotosBySol(sol: number | null) {
+  return useQuery({
+    queryKey: ["mars", "perseverance", "sol", sol],
+    queryFn: () => fetchMarsPhotosBySol(sol as number),
+    enabled: sol !== null,
     staleTime: HOUR,
   });
 }

@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { useApod } from "../hooks/queries";
 import { apodFallback } from "../data/fallback";
 import { formatCzDate } from "../lib/format";
+import Lightbox from "./Lightbox";
 
 // Statické rozmístění hvězd pro pozadí mlhoviny (zobrazí se, dokud není snímek).
 const stars = [
@@ -42,6 +44,7 @@ function Stars() {
 
 export default function Hero() {
   const { data, isLoading, isError } = useApod();
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   // Obsah: živá data, jinak fallback. U videa necháme pozadí mlhoviny.
   const isImage = data?.media_type === "image";
@@ -50,20 +53,22 @@ export default function Hero() {
   const description = data?.explanation ?? apodFallback.explanation;
   const date = data?.date ?? apodFallback.date;
   const credit = data?.copyright?.trim() ?? (isError ? apodFallback.credit : "NASA");
-  const link = data?.url;
 
   return (
     <section
       aria-label="Snímek dne"
       className="hero-bg fade-up relative overflow-hidden rounded-[20px] shadow-[0_4px_24px_rgba(0,0,0,0.12)]"
     >
-      {/* Skutečný snímek APOD jako pozadí */}
+      {/* Skutečný snímek APOD jako pozadí (klik otevře lightbox) */}
       {bgImage && (
-        <img
-          src={bgImage}
-          alt={title}
-          className="absolute inset-0 size-full object-cover"
-        />
+        <button
+          type="button"
+          onClick={() => setLightboxOpen(true)}
+          aria-label={`Zobrazit snímek: ${title}`}
+          className="absolute inset-0 cursor-zoom-in"
+        >
+          <img src={bgImage} alt={title} className="size-full object-cover" />
+        </button>
       )}
 
       {!bgImage && <Stars />}
@@ -71,8 +76,8 @@ export default function Hero() {
       {/* Overlay vlevo pro čitelnost */}
       <div className="hero-overlay pointer-events-none absolute inset-0" aria-hidden="true" />
 
-      {/* Obsah */}
-      <div className="relative flex min-h-[440px] flex-col justify-center px-8 py-12 sm:px-12">
+      {/* Obsah (klik mimo tlačítka propustíme na snímek v pozadí) */}
+      <div className="pointer-events-none relative flex min-h-[440px] flex-col justify-center px-8 py-12 sm:px-12">
         <span className="inline-flex w-fit items-center rounded-full border border-accent/30 bg-primary/20 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-accent">
           Snímek dne
         </span>
@@ -92,14 +97,24 @@ export default function Hero() {
               {description}
             </p>
 
-            <a
-              href={link ?? "#"}
-              target={link ? "_blank" : undefined}
-              rel="noreferrer"
-              className="mt-7 inline-flex w-fit items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-2.5 text-[13px] font-semibold text-white transition-transform hover:scale-[1.03]"
-            >
-              Číst dál <span aria-hidden="true">→</span>
-            </a>
+            {data ? (
+              <button
+                type="button"
+                onClick={() => setLightboxOpen(true)}
+                className="pointer-events-auto mt-7 inline-flex w-fit items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-2.5 text-[13px] font-semibold text-white transition-transform hover:scale-[1.03]"
+              >
+                Číst dál <span aria-hidden="true">→</span>
+              </button>
+            ) : (
+              <a
+                href="https://apod.nasa.gov/apod/astropix.html"
+                target="_blank"
+                rel="noreferrer"
+                className="pointer-events-auto mt-7 inline-flex w-fit items-center gap-1.5 rounded-full bg-gradient-to-r from-primary to-accent px-6 py-2.5 text-[13px] font-semibold text-white transition-transform hover:scale-[1.03]"
+              >
+                Číst dál <span aria-hidden="true">→</span>
+              </a>
+            )}
 
             <p className="mt-10 text-[11px] text-canvas/30">
               {formatCzDate(date)} &nbsp;·&nbsp; {credit}
@@ -107,6 +122,10 @@ export default function Hero() {
           </>
         )}
       </div>
+
+      {lightboxOpen && data && (
+        <Lightbox apod={data} onClose={() => setLightboxOpen(false)} />
+      )}
     </section>
   );
 }

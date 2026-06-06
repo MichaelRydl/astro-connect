@@ -1,25 +1,66 @@
-import { useMarsPhotos } from "../hooks/queries";
+import { useMarsPhotos, useMarsPhotosBySol } from "../hooks/queries";
+import { useMarsFilters } from "../store/marsFilters";
+import type { MarsPhoto } from "../api/mars";
 import PhotoCard, { PhotoCardSkeleton } from "./PhotoCard";
+import Dropdown, { type DropdownItem } from "./Dropdown";
 import ErrorNote from "./ErrorNote";
 
-function FilterChip({ label }: { label: string }) {
-  return (
-    <button
-      type="button"
-      className="inline-flex items-center gap-2 rounded-lg border border-stroke bg-white px-3.5 py-2 text-xs font-medium text-ink transition-colors hover:border-mars/40"
-    >
-      {label}
-      <span className="text-[10px] text-muted-soft" aria-hidden="true">
-        ▾
-      </span>
-    </button>
-  );
+const PHOTO_LIMIT = 6;
+const SOL_OPTIONS = 8;
+
+/** Unikátní kamery z aktuální sady snímků (pro filtr). */
+function uniqueCameras(photos: MarsPhoto[]) {
+  const seen = new Map<string, string>();
+  for (const p of photos) {
+    if (!seen.has(p.camera.name)) seen.set(p.camera.name, p.camera.full_name);
+  }
+  return [...seen].map(([name, fullName]) => ({ name, fullName }));
 }
 
 export default function MarsSection() {
-  const { data, isLoading, isError } = useMarsPhotos();
-  const photos = data?.slice(0, 6) ?? [];
-  const latestSol = photos[0]?.sol;
+  const { sol, cameraName, setSol, setCamera } = useMarsFilters();
+
+  // Nejnovější sada vždy běží (zdroj nejnovějšího solu pro dropdown).
+  const latest = useMarsPhotos();
+  const bySol = useMarsPhotosBySol(sol);
+
+  const latestSol = latest.data?.[0]?.sol;
+  const isLatest = sol === null;
+  const active = isLatest ? latest : bySol;
+
+  const allPhotos = active.data ?? [];
+  const cameras = uniqueCameras(allPhotos);
+  const filtered = cameraName
+    ? allPhotos.filter((p) => p.camera.name === cameraName)
+    : allPhotos;
+  const photos = filtered.slice(0, PHOTO_LIMIT);
+
+  // Volby pro dropdowny
+  const selectedSol = sol ?? latestSol;
+  const solItems: DropdownItem[] = latestSol
+    ? Array.from({ length: SOL_OPTIONS }, (_, i) => latestSol - i).map((s) => ({
+        key: String(s),
+        label: `Sol ${s}`,
+        active: s === selectedSol,
+        // Nejnovější sol využívá cache z latest_photos.
+        onSelect: () => setSol(s === latestSol ? null : s),
+      }))
+    : [];
+
+  const cameraItems: DropdownItem[] = [
+    {
+      key: "all",
+      label: "Všechny kamery",
+      active: cameraName === null,
+      onSelect: () => setCamera(null),
+    },
+    ...cameras.map((c) => ({
+      key: c.name,
+      label: c.fullName,
+      active: c.name === cameraName,
+      onSelect: () => setCamera(c.name),
+    })),
+  ];
 
   return (
     <section aria-labelledby="mars-heading">
@@ -33,22 +74,39 @@ export default function MarsSection() {
 
       {/* Filtry */}
       <div className="mt-4 flex flex-wrap gap-3">
-        <FilterChip label={latestSol ? `Sol ${latestSol}` : "Sol —"} />
-        <FilterChip label="Všechny kamery" />
+        <Dropdown
+          label={selectedSol ? `Sol ${selectedSol}` : "Sol —"}
+          items={solItems}
+          disabled={!latestSol}
+        />
+        <Dropdown
+          label={
+            cameraName
+              ? (cameras.find((c) => c.name === cameraName)?.fullName ?? "Kamera")
+              : "Všechny kamery"
+          }
+          items={cameraItems}
+          disabled={allPhotos.length === 0}
+        />
       </div>
 
       {/* Mřížka 3×2 */}
       <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {isLoading &&
-          Array.from({ length: 6 }).map((_, i) => <PhotoCardSkeleton key={i} />)}
+        {active.isLoading &&
+          Array.from({ length: PHOTO_LIMIT }).map((_, i) => <PhotoCardSkeleton key={i} />)}
 
-        {!isLoading &&
+        {!active.isLoading &&
           photos.map((photo) => <PhotoCard key={photo.id} photo={photo} />)}
       </div>
 
-      {isError && <ErrorNote className="mt-6" message="Snímky z Marsu se nepodařilo načíst." />}
-      {!isLoading && !isError && photos.length === 0 && (
-        <ErrorNote className="mt-6" message="Pro tento sol nejsou k dispozici žádné snímky." />
+      {active.isError && (
+        <ErrorNote className="mt-6" message="Snímky z Marsu se nepodařilo načíst." />
+      )}
+      {!active.isLoading && !active.isError && photos.length === 0 && (
+        <ErrorNote
+          className="mt-6"
+          message="Pro zvolený sol a kameru nejsou k dispozici žádné snímky."
+        />
       )}
     </section>
   );

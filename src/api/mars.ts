@@ -20,9 +20,21 @@ interface LatestPhotosResponse {
   latest_photos: MarsPhoto[];
 }
 
+interface PhotosResponse {
+  photos: MarsPhoto[];
+}
+
 export async function fetchMarsLatest(): Promise<MarsPhoto[]> {
   const data = await nasaFetch<LatestPhotosResponse>(
     "/mars-photos/api/v1/rovers/perseverance/latest_photos",
   );
   return data.latest_photos ?? [];
+}
+
+export async function fetchMarsPhotosBySol(sol: number): Promise<MarsPhoto[]> {
+  const data = await nasaFetch<PhotosResponse>(
+    "/mars-photos/api/v1/rovers/perseverance/photos",
+    { sol: String(sol) },
+  );
+  return data.photos ?? [];
 }
