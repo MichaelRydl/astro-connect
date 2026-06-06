@@ -1,21 +1,17 @@
+import { useState } from "react";
+import { Link, NavLink } from "react-router-dom";
+
 const navItems = [
-  { label: "Domů", active: true },
-  { label: "Mars", active: false },
-  { label: "Asteroidy", active: false },
+  { label: "Domů", to: "/", end: true },
+  { label: "Mars", to: "/mars", end: false },
+  { label: "Asteroidy", to: "/asteroidy", end: false },
 ];
 
 /** Logo — souhvězdí složené z kroužků (viz návrh). */
 function Logo() {
   return (
     <svg width="28" height="28" viewBox="0 0 28 28" aria-hidden="true">
-      <circle
-        cx="14"
-        cy="14"
-        r="12"
-        fill="none"
-        stroke="url(#logoGrad)"
-        strokeWidth="1.5"
-      />
+      <circle cx="14" cy="14" r="12" fill="none" stroke="url(#logoGrad)" strokeWidth="1.5" />
       <circle cx="10" cy="10" r="2" fill="#a78bfa" opacity="0.9" />
       <circle cx="18" cy="12" r="1.5" fill="#6c5ce7" opacity="0.7" />
       <circle cx="14" cy="18" r="1.8" fill="#a78bfa" opacity="0.8" />
@@ -30,30 +26,37 @@ function Logo() {
   );
 }
 
+function desktopLinkClass({ isActive }: { isActive: boolean }) {
+  return isActive
+    ? "rounded-full bg-primary/15 px-4 py-1.5 text-[13px] font-medium text-accent"
+    : "rounded-full px-4 py-1.5 text-[13px] font-medium text-muted transition-colors hover:text-canvas";
+}
+
+function mobileLinkClass({ isActive }: { isActive: boolean }) {
+  return isActive
+    ? "block rounded-lg bg-primary/15 px-4 py-2.5 text-sm font-medium text-accent"
+    : "block rounded-lg px-4 py-2.5 text-sm font-medium text-muted transition-colors hover:text-canvas";
+}
+
 export default function Navbar() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <header className="sticky top-0 z-50 border-b border-white/5 bg-deep-space/90 backdrop-blur-md">
       <nav className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-6 lg:px-0">
         {/* Logo */}
-        <a href="#" className="flex items-center gap-2.5">
+        <Link to="/" className="flex items-center gap-2.5" onClick={() => setMenuOpen(false)}>
           <Logo />
           <span className="font-serif text-xl text-canvas">AstroConnect</span>
-        </a>
+        </Link>
 
-        {/* Navigace */}
+        {/* Navigace (desktop) */}
         <ul className="hidden items-center gap-2 md:flex">
           {navItems.map((item) => (
             <li key={item.label}>
-              <a
-                href="#"
-                className={
-                  item.active
-                    ? "rounded-full bg-primary/15 px-4 py-1.5 text-[13px] font-medium text-accent"
-                    : "rounded-full px-4 py-1.5 text-[13px] font-medium text-muted transition-colors hover:text-canvas"
-                }
-              >
+              <NavLink to={item.to} end={item.end} className={desktopLinkClass}>
                 {item.label}
-              </a>
+              </NavLink>
             </li>
           ))}
         </ul>
@@ -63,7 +66,7 @@ export default function Navbar() {
           <button
             type="button"
             aria-label="Nastavení"
-            className="flex size-8 items-center justify-center rounded-full bg-white/[0.06] text-muted transition-colors hover:text-canvas"
+            className="hidden size-8 items-center justify-center rounded-full bg-white/[0.06] text-muted transition-colors hover:text-canvas sm:flex"
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
               <circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.6" />
@@ -82,8 +85,43 @@ export default function Navbar() {
           >
             M
           </button>
+
+          {/* Hamburger (mobil) */}
+          <button
+            type="button"
+            aria-label="Menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((o) => !o)}
+            className="flex size-8 items-center justify-center rounded-full bg-white/[0.06] text-muted transition-colors hover:text-canvas md:hidden"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              {menuOpen ? (
+                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+              ) : (
+                <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+              )}
+            </svg>
+          </button>
         </div>
       </nav>
+
+      {/* Navigace (mobil) */}
+      {menuOpen && (
+        <ul className="flex flex-col gap-1 border-t border-white/5 px-4 py-3 md:hidden">
+          {navItems.map((item) => (
+            <li key={item.label}>
+              <NavLink
+                to={item.to}
+                end={item.end}
+                onClick={() => setMenuOpen(false)}
+                className={mobileLinkClass}
+              >
+                {item.label}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      )}
     </header>
   );
 }

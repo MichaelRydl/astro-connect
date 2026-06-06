@@ -5,7 +5,6 @@ import PhotoCard, { PhotoCardSkeleton } from "./PhotoCard";
 import Dropdown, { type DropdownItem } from "./Dropdown";
 import ErrorNote from "./ErrorNote";
 
-const PHOTO_LIMIT = 6;
 const SOL_OPTIONS = 8;
 
 /** Unikátní kamery z aktuální sady snímků (pro filtr). */
@@ -17,7 +16,13 @@ function uniqueCameras(photos: MarsPhoto[]) {
   return [...seen].map(([name, fullName]) => ({ name, fullName }));
 }
 
-export default function MarsSection() {
+export default function MarsSection({
+  limit = 6,
+  wide = false,
+}: {
+  limit?: number;
+  wide?: boolean;
+}) {
   const { sol, cameraName, setSol, setCamera } = useMarsFilters();
 
   // Nejnovější sada vždy běží (zdroj nejnovějšího solu pro dropdown).
@@ -33,7 +38,11 @@ export default function MarsSection() {
   const filtered = cameraName
     ? allPhotos.filter((p) => p.camera.name === cameraName)
     : allPhotos;
-  const photos = filtered.slice(0, PHOTO_LIMIT);
+  const photos = filtered.slice(0, limit);
+
+  const gridClass = wide
+    ? "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+    : "grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3";
 
   // Volby pro dropdowny
   const selectedSol = sol ?? latestSol;
@@ -90,10 +99,10 @@ export default function MarsSection() {
         />
       </div>
 
-      {/* Mřížka 3×2 */}
-      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {/* Mřížka snímků */}
+      <div className={`mt-6 ${gridClass}`}>
         {active.isLoading &&
-          Array.from({ length: PHOTO_LIMIT }).map((_, i) => <PhotoCardSkeleton key={i} />)}
+          Array.from({ length: limit }).map((_, i) => <PhotoCardSkeleton key={i} />)}
 
         {!active.isLoading &&
           photos.map((photo) => <PhotoCard key={photo.id} photo={photo} />)}

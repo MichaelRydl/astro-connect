@@ -55,9 +55,9 @@ function RowSkeleton() {
   );
 }
 
-export default function AsteroidTracker() {
+export default function AsteroidTracker({ limit = 4 }: { limit?: number }) {
   const { data, isLoading, isError } = useNeoFeed();
-  const objects = data?.objects.slice(0, 4) ?? [];
+  const objects = data?.objects.slice(0, limit) ?? [];
 
   return (
     <section

@@ -6,11 +6,6 @@ const longFmt = new Intl.DateTimeFormat("cs-CZ", {
   year: "numeric",
 });
 
-const shortFmt = new Intl.DateTimeFormat("cs-CZ", {
-  day: "numeric",
-  month: "numeric",
-});
-
 /** Přijímá ISO řetězec ("2026-03-29") nebo "2026-03-29 00:00:00". */
 function toDate(value: string): Date {
   return new Date(value.replace(" ", "T"));
@@ -22,7 +17,8 @@ export function formatCzDate(value: string): string {
 
 /** Krátký formát pro statistiky, např. "29.3.". */
 export function formatCzShort(value: string): string {
-  return shortFmt.format(toDate(value)).replace(/\s/g, "") + ".";
+  const d = toDate(value);
+  return `${d.getDate()}.${d.getMonth() + 1}.`;
 }
 
 /** Dnešní datum ve formátu YYYY-MM-DD (lokální čas). */

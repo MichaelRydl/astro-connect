@@ -17,8 +17,10 @@ several NASA Open APIs:
 > **wired to live NASA Open APIs** via TanStack Query (APOD, Mars Rover Photos,
 > NeoWs, EPIC). Each section handles loading (skeletons), error, and empty
 > states. The Mars **sol + camera filters are functional** (Zustand-backed), the
-> APOD hero opens a **lightbox**, and an **error boundary** wraps the app. Treat
-> the design SVG as the source of truth for look & layout.
+> APOD hero opens a **lightbox**, and an **error boundary** wraps the app.
+> **React Router** drives three routes (`/`, `/mars`, `/asteroidy`) with a shared
+> layout and a responsive mobile menu. Treat the design SVG as the source of
+> truth for look & layout.
 >
 > Requires a NASA API key in `VITE_NASA_API_KEY` (see `.env.example`); falls back
 > to `DEMO_KEY`, which has tight rate limits (~30 req/hour).
@@ -31,9 +33,11 @@ several NASA Open APIs:
 | Language       | TypeScript ~5.9 (strict mode)           |
 | Build / dev    | Vite 8 (`@vitejs/plugin-react`, Oxc)    |
 | Styling        | Tailwind CSS v4 (via `@tailwindcss/vite`) |
+| Routing        | React Router v7 (`react-router-dom`)    |
 | Server state   | TanStack Query v5 (`@tanstack/react-query`) |
 | Client state   | Zustand v5                              |
 | Linting        | ESLint 9 (flat config) + typescript-eslint |
+| Testing        | Vitest 3 + Testing Library (jsdom)      |
 
 > Note: TanStack Query **is wired up** (`QueryClientProvider` in `main.tsx`,
 > client in `src/lib/queryClient.ts`) and handles all NASA API fetching. Zustand
@@ -46,10 +50,16 @@ several NASA Open APIs:
 ├── index.html              # Vite entry; mounts #root, loads Google Fonts
 ├── .env.example            # VITE_NASA_API_KEY (copy to .env)
 ├── src/
-│   ├── main.tsx            # React root + QueryClientProvider; imports index.css
-│   ├── App.tsx             # Page composition (layout grid: main 2/3 + sidebar 1/3)
+│   ├── main.tsx            # React root: ErrorBoundary > QueryClientProvider > App
+│   ├── App.tsx             # Router: BrowserRouter + Routes (Layout + pages)
 │   ├── index.css           # Tailwind import + @theme tokens + animations
 │   ├── vite-env.d.ts       # Typed import.meta.env (VITE_NASA_API_KEY)
+│   ├── pages/              # Route components
+│   │   ├── HomePage.tsx        # "/" — hero + Mars grid + sidebar + stats
+│   │   ├── MarsPage.tsx        # "/mars" — wide Mars gallery (limit 12)
+│   │   ├── AsteroidsPage.tsx   # "/asteroidy" — full NEO list
+│   │   └── NotFoundPage.tsx    # 404
+│   ├── test/setup.ts       # jest-dom matchers + RTL cleanup
 │   ├── lib/
 │   │   ├── nasa.ts             # nasaFetch helper, API key, NasaError
 │   │   ├── format.ts           # cs-CZ date formatting, todayIso()
@@ -63,7 +73,8 @@ several NASA Open APIs:
 │   ├── store/marsFilters.ts # Zustand: selected sol + camera
 │   ├── data/fallback.ts    # APOD fallback content on error
 │   └── components/         # Presentational UI components
-│       ├── Navbar.tsx          # Sticky top nav + logo
+│       ├── Layout.tsx          # Navbar + <Outlet/> + Footer shell
+│       ├── Navbar.tsx          # Sticky nav: NavLinks + responsive mobile menu
 │       ├── Hero.tsx            # APOD hero (real image bg) + lightbox trigger
 │       ├── Lightbox.tsx        # Fullscreen APOD modal (Esc/backdrop close)
 │       ├── MarsSection.tsx     # Mars header + functional filters + photo grid
@@ -75,9 +86,11 @@ several NASA Open APIs:
 │       ├── ErrorNote.tsx       # Reusable inline error message
 │       ├── ErrorBoundary.tsx   # App-level render error fallback
 │       └── Footer.tsx          # Footer + links
+│       └── *.test.ts(x)        # Co-located Vitest tests (format, neo, epic, Dropdown)
 ├── public/                 # Static assets served at / (favicon.svg, icons.svg)
 ├── astroconnect-design.svg # Design spec: layout, typography, color palette
 ├── vite.config.ts          # Vite plugins: react() + tailwindcss()
+├── vitest.config.ts         # Test config (jsdom, setup); loaded only by Vitest
 ├── eslint.config.js         # Flat ESLint config
 ├── tsconfig.json           # Project references → app + node configs
 ├── tsconfig.app.json        # Compiler options for src/ (strict, bundler mode)
@@ -92,12 +105,24 @@ npm run dev        # start Vite dev server with HMR
 npm run build      # type-check (tsc -b) then bundle (vite build) → dist/
 npm run lint       # run ESLint over the repo
 npm run preview    # serve the production build locally
+npm run test       # run the Vitest suite once
+npm run test:watch # run Vitest in watch mode
+npm run coverage   # run tests with a v8 coverage report
 ```
 
-There is currently **no test runner** configured. `npm run build` is the
-strongest correctness gate — it runs `tsc -b` (full type-check across the
-project references) before bundling. Run `npm run build` and `npm run lint`
-before considering a change done.
+Before considering a change done, run `npm run lint`, `npm run test`, and
+`npm run build`. `npm run build` is the strongest correctness gate — `tsc -b`
+type-checks every project file (including `*.test.ts(x)`) before bundling.
+
+### Testing
+- Vitest + Testing Library, jsdom environment. Config lives in `vitest.config.ts`
+  (kept separate from `vite.config.ts` to avoid a Vite-version type clash during
+  `tsc -b`). Matchers/cleanup are registered in `src/test/setup.ts`.
+- Tests are **co-located** with the code (`foo.ts` → `foo.test.ts`). Import
+  `describe/it/expect/vi` from `vitest` explicitly (globals are not enabled).
+- Favor testing pure logic (API mappers, formatters, URL builders) by mocking
+  `fetch` with `vi.stubGlobal`; use Testing Library + `userEvent` for component
+  behavior (see `Dropdown.test.tsx`).
 
 ## Conventions
 
@@ -114,8 +139,10 @@ before considering a change done.
 
 ### Styling
 - Use **Tailwind utility classes** in JSX (`className="text-3xl font-bold"`).
-  Tailwind v4 is configured via the Vite plugin and a single
-  `@import "tailwindcss";` in `src/App.css` — there is no `tailwind.config.js`.
+  Tailwind v4 is configured via the Vite plugin; the `@import "tailwindcss";`
+  and `@theme` tokens live in `src/index.css` — there is no `tailwind.config.js`.
+  Note: Tailwind only generates classes it finds as **literal strings** — never
+  build class names by interpolation (`bg-${x}`); branch on full literals.
 - Design tokens from `astroconnect-design.svg` (use these when implementing UI):
   - Background (dark): `#0D0B1A` / `#1E1C19`
   - Surface / light bg: `#F5F3F0`
@@ -140,6 +167,15 @@ before considering a change done.
   states — follow the existing components.
 - Use Zustand stores for cross-component client state; keep server data in
   TanStack Query, not duplicated into Zustand.
+
+### Routing
+- Routes are declared in `src/App.tsx` (`BrowserRouter` + `Routes`). Pages live
+  in `src/pages/`; the shared chrome (nav + footer) is `components/Layout.tsx`
+  rendered via `<Outlet/>`. Add a new section by adding a page + a `<Route>` and
+  a `navItems` entry in `Navbar.tsx`.
+- `BrowserRouter` uses the HTML5 history API, so a production host must rewrite
+  unknown paths to `index.html` (Vercel does this by default). Without that,
+  refreshing `/mars` 404s.
 
 ## Git workflow
 
