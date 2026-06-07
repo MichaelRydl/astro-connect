@@ -174,8 +174,15 @@ type-checks every project file (including `*.test.ts(x)`) before bundling.
   rendered via `<Outlet/>`. Add a new section by adding a page + a `<Route>` and
   a `navItems` entry in `Navbar.tsx`.
 - `BrowserRouter` uses the HTML5 history API, so a production host must rewrite
-  unknown paths to `index.html` (Vercel does this by default). Without that,
-  refreshing `/mars` 404s.
+  unknown paths to `index.html`. `vercel.json` does this for Vercel; replicate
+  the rewrite on any other host.
+
+## CI & deployment
+
+- **CI:** `.github/workflows/ci.yml` runs `npm ci` → lint → test → build on
+  pushes to `main` and on every PR (Node 22). Keep all three green.
+- **Deploy:** Vite SPA; `vercel.json` rewrites all paths to `index.html`. Set
+  `VITE_NASA_API_KEY` as an environment variable on the host.
 
 ## Git workflow
 

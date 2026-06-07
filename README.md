@@ -1,73 +1,48 @@
-# React + TypeScript + Vite
+# AstroConnect
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Webová aplikace pro objevování vesmíru skrze otevřená data NASA. UI je v češtině
+a vychází z návrhu v [`astroconnect-design.svg`](./astroconnect-design.svg).
 
-Currently, two official plugins are available:
+Zobrazuje data ze čtyř otevřených NASA API:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **APOD** — Astronomický snímek dne (hero + lightbox)
+- **Mars Rover Photos** — nejnovější snímky z Perseverance s filtry (sol + kamera)
+- **NeoWs** — blízké objekty (asteroidy) se statusem bezpečný / sledovat
+- **EPIC** — živá Země z družice DSCOVR s přehráním rotace
 
-## React Compiler
+## Tech stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+React 19 · TypeScript (strict) · Vite 8 · Tailwind CSS v4 · React Router v7 ·
+TanStack Query v5 · Zustand v5 · Vitest + Testing Library
 
-## Expanding the ESLint configuration
+## Začínáme
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+cp .env.example .env   # doplň svůj NASA API klíč (https://api.nasa.gov)
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Bez klíče se použije `DEMO_KEY` s přísnými limity (~30 požadavků/hod). Vlastní
+klíč je zdarma a doporučený — aplikace dělá několik volání na jedno načtení.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Skripty
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+| Příkaz               | Popis                                            |
+| -------------------- | ------------------------------------------------ |
+| `npm run dev`        | dev server s HMR                                 |
+| `npm run build`      | typová kontrola (`tsc -b`) + build do `dist/`    |
+| `npm run preview`    | servíruje produkční build                        |
+| `npm run lint`       | ESLint                                           |
+| `npm run test`       | spustí testy (Vitest)                            |
+| `npm run test:watch` | testy ve watch režimu                            |
+| `npm run coverage`   | testy s reportem pokrytí                         |
+
+## Nasazení
+
+Projekt je SPA s `BrowserRouter`. Hostovací služba musí přesměrovat neznámé
+cesty na `index.html` — pro Vercel to zajišťuje [`vercel.json`](./vercel.json).
+
+## Dokumentace pro vývoj
+
+Konvence, struktura a postupy jsou v [`CLAUDE.md`](./CLAUDE.md).
